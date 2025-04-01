@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadGroups();
 });
 
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
 function loadGroups() {
     fetch('/get_groups')
         .then(response => response.json())

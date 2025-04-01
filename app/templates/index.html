@@ -16,6 +16,7 @@
                     <h4 class="text-center mb-4">Введите данные</h4>
                     
                     <form>
+                        {{ form.hidden_tag() }}
                         <div class="mb-3">
                             <select class="form-control" id="group" onchange="loadStudents(this.value)">
                                 <option value="">Загрузка...</option>

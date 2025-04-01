@@ -1,12 +1,18 @@
 from flask import Blueprint, request, jsonify, render_template
 from app.services.attendance_service import Attendance_serv
+from flask_wtf import FlaskForm
+from wtforms import HiddenField
 
+
+class CSRFForm(FlaskForm):
+        csrf_token = HiddenField()
 
 attendance_bp = Blueprint('attendance', __name__)
 
 @attendance_bp.route('/')
 def index():
-    return render_template('index.html')
+    form = CSRFForm()
+    return render_template('index.html', form=form)
 
 
 @attendance_bp.route('/check_location', methods=['POST'])
