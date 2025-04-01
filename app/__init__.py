@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 
 
 db = SQLAlchemy()
@@ -16,6 +17,7 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db)
+    csrf = CSRFProtect(app)
 
     from app.routes.attendance import attendance_bp
     app.register_blueprint(attendance_bp)
@@ -23,6 +25,10 @@ def create_app():
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({'message': 'Not Found'}), 404
+    
+    @app.errorhandler(400)
+    def not_found(error):
+        return jsonify({'message': 'CRSF Not Found'}), 400
     
     @app.errorhandler(Exception)
     def internal_server_error(error):

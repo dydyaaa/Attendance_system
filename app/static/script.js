@@ -2,7 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     loadGroups();
 });
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+function getCSRFToken() {
+    let csrfInput = document.querySelector("input[name='csrf_token']");
+    return csrfInput ? csrfInput.value : "";
+}
 
 function loadGroups() {
     fetch('/get_groups')
@@ -60,9 +63,14 @@ function checkLocation() {
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
+            let csrfToken = getCSRFToken(); // Получаем CSRF токен
+
             fetch('/check_location', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken  // Передаём CSRF токен в заголовке
+                },
                 body: JSON.stringify({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,

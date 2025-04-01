@@ -23,7 +23,7 @@ logging.basicConfig(
 class Attendance_serv():
 
     TARGET_LOCATION = (55.845356, 37.506611)
-    RADIUS_KM = 20000
+    RADIUS_KM = 2
 
     @classmethod
     def check_location(cls, student_location, student_id, student_group, student_ip, user_agent):
