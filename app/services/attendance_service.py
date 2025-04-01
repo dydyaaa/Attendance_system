@@ -26,10 +26,13 @@ class Attendance_serv():
     RADIUS_KM = 20000
 
     @classmethod
-    def check_location(cls, student_location, student_id, student_group, student_ip):
+    def check_location(cls, student_location, student_id, student_group, student_ip, user_agent):
 
         current_time = datetime.now().time() 
         current_date = datetime.now().date()
+
+        if not cls.is_browser(user_agent):
+            return 'Неверное устройство!'
 
         # Сначала ищем занятие по группе и времени
         pair = Pairs.query.filter(
@@ -87,12 +90,20 @@ class Attendance_serv():
         else:
             logger.info(f'Студент {student_id} не на паре!')
             return "Вы находитесь за пределами вуза ❌"
-        
+    
+    @staticmethod
     def get_groups():
 
         return [{"id": g.group_id, "name": g.group_name} for g in Groups.query.all()]
     
+    @staticmethod
     def get_students(group_id):
         
         students = Students.query.filter_by(group_id=group_id).all()
         return [{"id": s.student_id, "last_name": s.student_second_name, "first_name": s.student_first_name} for s in students]
+    
+    @staticmethod
+    def is_browser(user_agent):
+        if any(browser in user_agent.lower() for browser in ['chrome', 'firefox', 'safari', 'edge', 'opera']):
+            return True
+        return False

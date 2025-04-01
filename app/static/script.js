@@ -36,6 +36,12 @@ function loadStudents(groupId) {
         .catch(error => console.error("Ошибка загрузки студентов:", error));
 }
 
+function setCookie(name, value, seconds) {
+    let date = new Date();
+    date.setTime(date.getTime() + (seconds * 1000));
+    document.cookie = `${name}=${value}; expires=${date.toUTCString()}; path=/`;
+}
+
 function checkLocation() {
     if (document.cookie.includes("attendance")) {
         alert("Вы уже отметились! Повторная отметка невозможна.");
@@ -65,6 +71,8 @@ function checkLocation() {
             .then(response => response.json())
             .then(data => {
                 document.getElementById('result').innerText = `${data.result}`;
+
+                setCookie("attendance", "marked", 5400);
             })
             .catch(error => console.error("Ошибка при запросе:", error));
         }, function(error) {

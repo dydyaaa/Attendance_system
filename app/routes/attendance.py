@@ -17,11 +17,13 @@ def check_location():
     student_id = data.get('student_id')
     student_group = data.get('group_id')
     student_ip = request.remote_addr
+    user_agent = request.headers.get('User-Agent')
 
     result = Attendance_serv.check_location(student_location, 
                                             student_id,
                                             student_group,
-                                            student_ip)
+                                            student_ip,
+                                            user_agent)
     
     return jsonify({'result': f'{result}'})
 
