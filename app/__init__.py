@@ -26,10 +26,6 @@ def create_app():
     def not_found(error):
         return jsonify({'message': 'Not Found'}), 404
     
-    @app.errorhandler(400)
-    def not_found(error):
-        return jsonify({'message': 'CRSF Not Found'}), 400
-    
     @app.errorhandler(Exception)
     def internal_server_error(error):
         app.logger.error(f'{error}')
