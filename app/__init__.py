@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, CSRFError
 
 
 db = SQLAlchemy()
@@ -18,6 +18,10 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     csrf = CSRFProtect(app)
+    
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        return jsonify({'result': 'CSRF токен не найден или невалиден!'})
 
     from app.routes.attendance import attendance_bp
     app.register_blueprint(attendance_bp)
