@@ -14,10 +14,11 @@ def create_app():
     load_dotenv()
     app.config.from_prefixed_env()
 
-    @app.route('/')
-    def index():
-        a = app.config['SECRET_KEY']
-        return jsonify({'message': f'{a}'})
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    from app.routes.attendance import attendance_bp
+    app.register_blueprint(attendance_bp)
 
     @app.errorhandler(404)
     def not_found(error):
